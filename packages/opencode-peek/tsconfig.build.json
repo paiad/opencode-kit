@@ -1,0 +1,13 @@
+{
+  "extends": "../../.opencode/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "../../.opencode",
+    "outDir": "dist",
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": [
+    "../../.opencode/plugin.ts",
+    "../../.opencode/lib/**/*.ts"
+  ]
+}

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.tgz
+.opencode/node_modules/
+.opencode/dist-tests/
+.opencode/tests/
+.opencode/.env
+.opencode/.env.*
+!.opencode/.env.example
+.workspace/cache/
+*.log

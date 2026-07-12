@@ -1,0 +1,39 @@
+{
+  "name": "opencode-peek",
+  "version": "0.1.0",
+  "description": "OpenCode session transcripts with token usage reports and extensible themes",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/plugin.js",
+  "exports": {
+    ".": "./dist/plugin.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.zh-CN.md",
+    "commands",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "prepack": "npm run build",
+    "test": "npm --prefix ../../.opencode test",
+    "pack:check": "npm pack --dry-run"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "transcript",
+    "token-usage",
+    "themes"
+  ],
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.17.14 <2"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "1.17.14",
+    "@types/node": "^25.9.1",
+    "typescript": "^5.9.3"
+  }
+}
