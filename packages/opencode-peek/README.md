@@ -4,6 +4,18 @@
 
 The initial release ships with one built-in theme; future themes can be added without changing the session-inspection pipeline.
 
+## Gallery
+
+<div align="center">
+  <img src="./assets/peek-session-overview.png" alt="opencode-peek session transcript overview" width="700" />
+  <p><em>Session transcript with token sidebar — "pixel" theme</em></p>
+</div>
+
+<div align="center">
+  <img src="./assets/peek-token-report-dialog.png" alt="opencode-peek token report dialog" width="700" />
+  <p><em>Detailed token usage report in modal dialog</em></p>
+</div>
+
 中文安装与 Agent 自动配置说明：[README.zh-CN.md](./README.zh-CN.md)
 
 The package also includes the standard command template at `commands/peek.md`. Copy it to `.opencode/commands/peek.md` after installation, or configure the equivalent command in `opencode.json`.

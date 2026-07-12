@@ -8,6 +8,18 @@
 - 根据模型识别的本地头像；
 - 可扩展的主题渲染基础。
 
+## 效果预览
+
+<div align="center">
+  <img src="./assets/peek-session-overview.png" alt="opencode-peek 会话 transcript 概览" width="700" />
+  <p><em>会话 transcript 与 Token 侧边栏 —— "pixel" 主题</em></p>
+</div>
+
+<div align="center">
+  <img src="./assets/peek-token-report-dialog.png" alt="opencode-peek Token 报告弹窗" width="700" />
+  <p><em>Token 用量详细报告弹窗</em></p>
+</div>
+
 ## 最推荐：让 Agent 自动安装和配置
 
 把下面这段话直接发给你的 OpenCode Agent：
