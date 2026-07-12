@@ -514,6 +514,10 @@
       background: #dff4ff;
       box-shadow: 2px 2px 0 #9fc8dc;
     }
+    .dialog-copy.is-copied {
+      background: #d8ffbf;
+      box-shadow: 2px 2px 0 #a8c98f;
+    }
     .token-report-copy-source {
       position: fixed;
       left: -9999px;
@@ -1163,6 +1167,10 @@
       transform: translate(-1px, -1px);
       box-shadow: 3px 3px 0 #9fc8dc;
     }
+    .json-copy.is-copied {
+      background: #d8ffbf;
+      box-shadow: 2px 2px 0 #a8c98f;
+    }
     .json-copy:disabled {
       cursor: default;
       opacity: 0.75;
@@ -1233,16 +1241,19 @@
     .file-glyph {
       display: grid;
       place-items: center;
-      min-width: 96px;
-      min-height: 72px;
-      padding: 10px 14px;
+      width: 88px;
+      min-height: 92px;
+      padding: 6px;
       border: 2px solid var(--line);
       background: var(--surface-soft);
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    }
+    .file-icon-svg {
+      display: block;
+      width: 58px;
+      height: 70px;
+    }
+    .file-icon-paper {
+      filter: drop-shadow(2px 2px 0 #c8bda8);
     }
     .file-meta {
       display: grid;

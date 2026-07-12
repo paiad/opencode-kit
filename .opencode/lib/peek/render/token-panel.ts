@@ -97,8 +97,9 @@ function renderTokenReportDialog(tokenUsage: PeekTokenUsage): string {
             source.hidden = true;
           }
           const previous = button.textContent;
+          button.classList.add("is-copied");
           button.textContent = "Copied";
-          window.setTimeout(() => { button.textContent = previous || "Copy"; }, 1200);
+          window.setTimeout(() => { button.classList.remove("is-copied"); button.textContent = previous || "Copy"; }, 1200);
         } catch {
           button.textContent = "Failed";
           window.setTimeout(() => { button.textContent = "Copy"; }, 1200);
