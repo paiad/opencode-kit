@@ -1,13 +1,17 @@
 {
-  "extends": "../../.opencode/tsconfig.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "noEmit": false,
-    "rootDir": "../../.opencode",
+    "rootDir": "src",
     "outDir": "dist",
     "rewriteRelativeImportExtensions": true
   },
-  "include": [
-    "../../.opencode/plugin.ts",
-    "../../.opencode/lib/**/*.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }

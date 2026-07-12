@@ -11,12 +11,18 @@ import type { PeekRenderOptions } from "../types/index.js";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const compiledStylesheetPath = resolve(scriptDir, "..", "styles", "pixel.css");
-const sourceStylesheetPath = resolve(scriptDir, "..", "..", "..", "..", "lib", "peek", "styles", "pixel.css");
-const stylesheetPath = existsSync(compiledStylesheetPath) ? compiledStylesheetPath : sourceStylesheetPath;
+const sourceStylesheetPaths = [
+  resolve(scriptDir, "..", "..", "..", "..", "src", "lib", "peek", "styles", "pixel.css"),
+  resolve(scriptDir, "..", "..", "..", "..", "..", "src", "lib", "peek", "styles", "pixel.css"),
+];
+const stylesheetPath = [compiledStylesheetPath, ...sourceStylesheetPaths].find(existsSync) || sourceStylesheetPaths[0];
 
 const compiledAvatarDir = resolve(scriptDir, "..", "avatar");
-const sourceAvatarDir = resolve(scriptDir, "..", "..", "..", "..", "lib", "peek", "avatar");
-const AVATAR_DIR = existsSync(compiledAvatarDir) ? compiledAvatarDir : sourceAvatarDir;
+const sourceAvatarDirs = [
+  resolve(scriptDir, "..", "..", "..", "..", "src", "lib", "peek", "avatar"),
+  resolve(scriptDir, "..", "..", "..", "..", "..", "src", "lib", "peek", "avatar"),
+];
+const AVATAR_DIR = [compiledAvatarDir, ...sourceAvatarDirs].find(existsSync) || sourceAvatarDirs[0];
 
 const MODEL_PREFIXES: [string, string][] = [
   ["anthropic", "claude"],
@@ -381,7 +387,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     parsed = parseCliArguments(process.argv.slice(2));
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
-    console.error("Usage: node .opencode/lib/peek/render-session.js <snapshot-json> [output-html] [--first-n-turns N]");
+    console.error("Usage: node packages/opencode-peek/dist/lib/peek/render/render-session.js <snapshot-json> [output-html] [--first-n-turns N]");
     process.exit(2);
   }
   console.log(await runRenderSession(parsed.inputPath, parsed.outputPath, parsed.options));

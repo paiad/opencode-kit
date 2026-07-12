@@ -4,6 +4,8 @@ dist/
 .opencode/node_modules/
 .opencode/dist-tests/
 .opencode/tests/
+packages/opencode-peek/tests/
+packages/opencode-peek/dist-tests/
 .opencode/.env
 .opencode/.env.*
 !.opencode/.env.example

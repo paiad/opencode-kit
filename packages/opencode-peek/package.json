@@ -1,6 +1,6 @@
 {
   "name": "opencode-peek",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "OpenCode session transcripts with token usage reports and extensible themes",
   "license": "MIT",
   "type": "module",
@@ -12,13 +12,13 @@
     "dist",
     "README.md",
     "README.zh-CN.md",
-    "assets",
     "LICENSE"
   ],
   "scripts": {
+    "prebuild": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
     "prepack": "npm run build",
-    "test": "npm --prefix ../../.opencode test",
+    "test": "node -e \"require('node:fs').rmSync('dist-tests',{recursive:true,force:true})\" && tsc -p tsconfig.test.json && node --experimental-sqlite --test dist-tests/tests/*.js && node -e \"require('node:fs').rmSync('dist-tests',{recursive:true,force:true})\"",
     "pack:check": "npm pack --dry-run"
   },
   "keywords": [

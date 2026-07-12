@@ -5,12 +5,13 @@
     "moduleResolution": "NodeNext",
     "lib": ["ES2022"],
     "types": ["node"],
-    "jsx": "react-jsx",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true
+    "noEmit": false,
+    "rootDir": ".",
+    "outDir": "dist-tests",
+    "rewriteRelativeImportExtensions": true
   },
-  "include": ["plugins/**/*.ts", "tools/**/*.ts", "lib/**/*.ts", "lib/**/*.tsx"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

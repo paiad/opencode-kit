@@ -3,8 +3,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const packageRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const repositoryRoot = resolve(packageRoot, "..", "..");
-const source = resolve(repositoryRoot, ".opencode", "lib", "peek");
+const source = resolve(packageRoot, "src", "lib", "peek");
 const destination = resolve(packageRoot, "dist", "lib", "peek");
 
 await rm(resolve(destination, "styles"), { recursive: true, force: true });
