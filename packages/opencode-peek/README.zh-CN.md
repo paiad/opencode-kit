@@ -11,12 +11,12 @@
 ## 效果预览
 
 <div align="center">
-  <img src="./assets/peek-session-overview.png" alt="opencode-peek 会话 transcript 概览" width="700" />
+  <img src="https://img.paiad.top/img/peek-session-overview.png" alt="opencode-peek 会话 transcript 概览" width="700" />
   <p><em>会话 transcript 与 Token 侧边栏 —— "pixel" 主题</em></p>
 </div>
 
 <div align="center">
-  <img src="./assets/peek-token-report-dialog.png" alt="opencode-peek Token 报告弹窗" width="700" />
+  <img src="https://img.paiad.top/img/peek-token-report-dialog.png" alt="opencode-peek Token 报告弹窗" width="700" />
   <p><em>Token 用量详细报告弹窗</em></p>
 </div>
 
@@ -75,6 +75,14 @@ opencode plugin -g opencode-peek
 ```text
 /peek
 ```
+
+如果已经安装过旧版本，需要强制刷新 OpenCode 的插件缓存：
+
+```bash
+opencode plugin opencode-peek --force
+```
+
+然后重启 OpenCode，并重新执行 `/peek` 生成最新 HTML。
 
 ## 产物和隐私
 

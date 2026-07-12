@@ -7,12 +7,12 @@ The initial release ships with one built-in theme; future themes can be added wi
 ## Gallery
 
 <div align="center">
-  <img src="./assets/peek-session-overview.png" alt="opencode-peek session transcript overview" width="700" />
+  <img src="https://img.paiad.top/img/peek-session-overview.png" alt="opencode-peek session transcript overview" width="700" />
   <p><em>Session transcript with token sidebar — "pixel" theme</em></p>
 </div>
 
 <div align="center">
-  <img src="./assets/peek-token-report-dialog.png" alt="opencode-peek token report dialog" width="700" />
+  <img src="https://img.paiad.top/img/peek-token-report-dialog.png" alt="opencode-peek token report dialog" width="700" />
   <p><em>Detailed token usage report in modal dialog</em></p>
 </div>
 
@@ -62,6 +62,14 @@ Install the plugin for the current project:
 Use `opencode plugin opencode-peek` to install the plugin and update the current project's configuration. To install it globally instead, use `opencode plugin -g opencode-peek`.
 
 Restart OpenCode after installation.
+
+To update an already installed plugin and replace the OpenCode cache, run:
+
+```bash
+opencode plugin opencode-peek --force
+```
+
+Restart OpenCode and run `/peek` again to regenerate the latest HTML output.
 
 ## Add the `/peek` command
 

@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Reusable plugins and extensions for <a href="https://opencode.ai">OpenCode</a>.
+  <em><strong>Reusable plugins and extensions</strong> for <a href="https://opencode.ai">OpenCode</a>.</em>
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
 `opencode-peek` turns the current OpenCode session into a readable, interactive HTML transcript.
 
 <p align="center">
-  <img src="./packages/opencode-peek/assets/peek-session-overview.png" alt="opencode-peek session overview" width="860">
+  <img src="https://img.paiad.top/img/peek-session-overview.png" alt="opencode-peek session overview" width="860">
 </p>
 
 ## Install
@@ -136,16 +136,20 @@ These files are local artifacts and should not be committed.
 ```text
 opencode-kit/
 ├── assets/                         # Root README assets
+├── .opencode/
+│   └── commands/peek.md             # Project-level /peek command
 ├── packages/
 │   └── opencode-peek/
-│       ├── assets/                 # Package documentation images
+│       ├── src/                    # Plugin source and runtime modules
+│       ├── tests/                  # Local package tests (gitignored)
+│       ├── scripts/                # Build-time asset preparation
 │       ├── dist/                   # Published build output
 │       └── README.md               # Package documentation
 ├── package.json                    # Root workspace configuration
 └── README.md                       # This document
 ```
 
-The root `assets/` directory is used only by this repository README. Package-specific documentation assets live inside the package and are included in the npm tarball when required.
+The root `assets/` directory is used only by this repository README. Package documentation screenshots are hosted remotely and are not bundled into the npm package.
 
 ## Development
 
@@ -170,7 +174,6 @@ npm run pack:peek -- --dry-run
 
 ## Documentation
 
-- [`opencode-peek` package documentation](./packages/opencode-peek/README.md)
 - [`opencode-peek` package documentation](./packages/opencode-peek/README.md)
 
 ## License

@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  面向 <a href="https://opencode.ai">OpenCode</a> 的可复用插件与扩展集合。
+  <em><strong>面向 <a href="https://opencode.ai">OpenCode</a> 的可复用插件与扩展集合</strong>。</em>
 </p>
 
 <p align="center">
@@ -14,8 +14,6 @@
   <img src="https://img.shields.io/badge/OpenCode-%3E%3D1.17.14-111111?style=flat-square" alt="OpenCode >=1.17.14">
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
 </p>
-
-English documentation: [README.md](./README.md)
 
 `opencode-kit` 是一个面向 OpenCode 的 monorepo，提供用于会话检查、 transcript 渲染和 Agent 工作流扩展的可复用插件。
 
@@ -30,7 +28,7 @@ English documentation: [README.md](./README.md)
 `opencode-peek` 会将当前 OpenCode 会话转换为可读、可交互的 HTML transcript。
 
 <p align="center">
-  <img src="./packages/opencode-peek/assets/peek-session-overview.png" alt="opencode-peek 会话概览" width="860">
+  <img src="https://img.paiad.top/img/peek-session-overview.png" alt="opencode-peek 会话概览" width="860">
 </p>
 
 ## 安装
@@ -138,16 +136,20 @@ opencode plugin opencode-peek
 ```text
 opencode-kit/
 ├── assets/                         # 根 README 资源
+├── .opencode/
+│   └── commands/peek.md             # 项目级 /peek command
 ├── packages/
 │   └── opencode-peek/
-│       ├── assets/                 # npm 包文档图片
+│       ├── src/                    # 插件源码与运行时模块
+│       ├── tests/                  # package 测试（已 gitignore）
+│       ├── scripts/                # 构建期资源处理脚本
 │       ├── dist/                   # 发布构建产物
 │       └── README.md               # 插件文档
 ├── package.json                    # 根 workspace 配置
 └── README.md                       # 英文文档
 ```
 
-根目录 `assets/` 只服务于仓库 README。插件专属文档资源放在 package 内，并在需要时随 npm tarball 一起发布。
+根目录 `assets/` 只服务于仓库 README。插件文档截图使用远程 URL，不再打包进 npm package。
 
 ## 开发
 
@@ -172,7 +174,6 @@ npm run pack:peek -- --dry-run
 
 ## 文档
 
-- [`opencode-peek` 插件文档](./packages/opencode-peek/README.zh-CN.md)
 - [`opencode-peek` 插件文档](./packages/opencode-peek/README.zh-CN.md)
 
 ## 许可证
