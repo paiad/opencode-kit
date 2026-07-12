@@ -13,6 +13,7 @@
     "README.md",
     "README.zh-CN.md",
     "commands",
+    "assets",
     "LICENSE"
   ],
   "scripts": {
@@ -30,6 +31,9 @@
   ],
   "peerDependencies": {
     "@opencode-ai/plugin": ">=1.17.14 <2"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "1.17.14",
