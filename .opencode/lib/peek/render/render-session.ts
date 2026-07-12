@@ -95,7 +95,7 @@ function jsonDetails(summary: string, value: unknown, className = ""): string {
 }
 
 function faviconDataUri(): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#fffdf7"/><circle cx="32" cy="35" r="22" fill="#e53935" stroke="#17140f" stroke-width="4"/><path d="M32 14v43" stroke="#17140f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="11" fill="#17140f"/><circle cx="20" cy="29" r="4" fill="#17140f"/><circle cx="44" cy="29" r="4" fill="#17140f"/><circle cx="24" cy="43" r="4" fill="#17140f"/><circle cx="40" cy="43" r="4" fill="#17140f"/><circle cx="32" cy="35" r="4" fill="#17140f"/><path d="M24 11 17 4M40 11l7-7" stroke="#17140f" stroke-width="4" stroke-linecap="round"/></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><text x="32" y="48" text-anchor="middle" font-size="46" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">🍟</text></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
@@ -285,7 +285,7 @@ function renderDocument(snapshot: unknown, context: RenderContext, avatarSvgMap?
   const totalParts = messages.reduce<number>((total, message) => total + (isObject(message) && Array.isArray(message.parts) ? message.parts.length : 0), 0);
   const css = readFileSync(stylesheetPath, "utf8");
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="${faviconDataUri()}"><title>peek · ${escapeHtml(sessionId)}</title><style>${css}</style></head><body>
-    <main class="shell"><div class="transcript-layout"><div class="token-sidebar"><header class="masthead"><div><p class="eyebrow">peek transcript</p><h1>${escapeHtml(sessionId)}</h1></div><dl class="meta"><div><dt>Messages</dt><dd>${messages.length}</dd></div><div><dt>Parts</dt><dd>${totalParts}</dd></div><div><dt>Captured</dt><dd>${escapeHtml(capturedAt(snapshot, context.snapshotPath))}</dd></div></dl></header>${renderTokenPanel(tokenUsage)}</div>
+    <main class="shell"><div class="transcript-layout"><div class="token-sidebar"><header class="masthead"><div><p class="eyebrow">peek transcript</p><h1>${escapeHtml(sessionId)}</h1></div><dl class="meta"><div><dt>Messages</dt><dd>${messages.length}</dd></div><div><dt>Parts</dt><dd>${totalParts}</dd></div><div class="meta-captured"><dt>Captured</dt><dd>${escapeHtml(capturedAt(snapshot, context.snapshotPath))}</dd></div></dl></header>${renderTokenPanel(tokenUsage)}</div>
     <div class="transcript-main"><section class="conversation" aria-label="Conversation transcript">${renderSystemPrompt(snapshot)}${messages.map((message, index) => renderMessage(message, index, model, avatarSvgMap)).join("") || `<p class="empty">No messages captured.</p>`}${jsonDetails("Snapshot JSON", snapshot, "raw-shell")}</section>${renderTurnMinimap(messages)}</div></div></main>
     <dialog class="image-lightbox"><button class="image-lightbox-close" type="button">Close</button><img class="image-lightbox-image" alt=""></dialog><script>${clientScript()}</script></body></html>`;
 }
