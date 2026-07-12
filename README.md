@@ -21,7 +21,7 @@
 
 | Package | Description | Install |
 | --- | --- | --- |
-| [`opencode-peek`](./packages/opencode-peek) | Render the current OpenCode session as a readable HTML transcript with token usage and model avatars. | `npm install opencode-peek` |
+| [`opencode-peek`](./packages/opencode-peek) | Render the current OpenCode session as a readable HTML transcript with token usage and model avatars. | `opencode plugin opencode-peek` |
 
 ## Peek
 
@@ -33,41 +33,57 @@
 
 ## Install
 
-Install the plugin from npm:
+### 🤖 Recommended: let your Agent configure it
+
+Send this instruction to your OpenCode Agent:
+
+````text
+Install and configure opencode-peek for the current OpenCode project.
+
+1. Run `opencode plugin opencode-peek` from the current project directory.
+2. Read `.opencode/opencode.json` and preserve all existing settings, plugins, and commands.
+3. Add or update `command.peek` with this template:
+
+```json
+{
+  "description": "Generate an HTML view of the current OpenCode session",
+  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+}
+```
+
+4. Validate `.opencode/opencode.json`.
+5. Tell me to restart OpenCode after setup.
+
+Do not install the package with npm directly, create a duplicate local plugin, or modify unrelated files.
+````
+
+### 🛠️ Manual configuration
+
+Install the plugin for the current project:
 
 ```bash
-npm install opencode-peek
+opencode plugin opencode-peek
 ```
 
 Requirements: Node.js `>=22` and OpenCode `>=1.17.14`.
 
-Add it to the plugin list in your OpenCode configuration without replacing existing plugins:
+To install it globally instead, use `opencode plugin -g opencode-peek`.
+
+The plugin and command are configured in `.opencode/opencode.json`:
 
 ```json
 {
-  "plugin": ["opencode-peek"]
+  "plugin": ["opencode-peek"],
+  "command": {
+    "peek": {
+      "description": "Generate an HTML view of the current OpenCode session",
+      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If either tool fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`."
+    }
+  }
 }
 ```
 
-Copy the bundled command template to the current project:
-
-```text
-packages/opencode-peek/commands/peek.md
-→ .opencode/commands/peek.md
-```
-
 Restart OpenCode after changing the configuration.
-
-### Recommended: let your Agent configure it
-
-Send this instruction to your OpenCode Agent:
-
-```text
-Install opencode-peek with npm.
-Keep the existing OpenCode configuration and add opencode-peek to the plugin list.
-Copy the package's commands/peek.md to .opencode/commands/peek.md.
-Validate the configuration and tell me to restart OpenCode.
-```
 
 ## Usage
 
@@ -123,7 +139,6 @@ opencode-kit/
 ├── packages/
 │   └── opencode-peek/
 │       ├── assets/                 # Package documentation images
-│       ├── commands/               # OpenCode command templates
 │       ├── dist/                   # Published build output
 │       └── README.md               # Package documentation
 ├── package.json                    # Root workspace configuration
@@ -156,7 +171,7 @@ npm run pack:peek -- --dry-run
 ## Documentation
 
 - [`opencode-peek` package documentation](./packages/opencode-peek/README.md)
-- [`opencode-peek` command template](./packages/opencode-peek/commands/peek.md)
+- [`opencode-peek` package documentation](./packages/opencode-peek/README.md)
 
 ## License
 

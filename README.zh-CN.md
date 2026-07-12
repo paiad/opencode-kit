@@ -23,7 +23,7 @@ English documentation: [README.md](./README.md)
 
 | 插件 | 说明 | 安装 |
 | --- | --- | --- |
-| [`opencode-peek`](./packages/opencode-peek) | 将当前 OpenCode 会话渲染为可读的 HTML transcript，并提供 token 使用量和模型头像。 | `npm install opencode-peek` |
+| [`opencode-peek`](./packages/opencode-peek) | 将当前 OpenCode 会话渲染为可读的 HTML transcript，并提供 token 使用量和模型头像。 | `opencode plugin opencode-peek` |
 
 ## Peek
 
@@ -35,41 +35,57 @@ English documentation: [README.md](./README.md)
 
 ## 安装
 
-从 npm 安装插件：
+### 🤖 推荐：让 Agent 自动配置
+
+将下面的指令发送给 OpenCode Agent：
+
+````text
+请为当前 OpenCode 项目安装并配置 opencode-peek。
+
+1. 在当前项目目录执行 `opencode plugin opencode-peek`。
+2. 读取 `.opencode/opencode.json`，保留所有已有的配置、plugin 和 command。
+3. 使用下面的内容新增或更新 `command.peek`：
+
+```json
+{
+  "description": "Generate an HTML view of the current OpenCode session",
+  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+}
+```
+
+4. 验证 `.opencode/opencode.json`。
+5. 配置完成后告诉我重启 OpenCode。
+
+不要直接使用 npm 安装，不要创建重复的本地 plugin，不要修改无关文件。
+````
+
+### 🛠️ 手动配置
+
+为当前项目安装插件：
 
 ```bash
-npm install opencode-peek
+opencode plugin opencode-peek
 ```
 
 要求：Node.js `>=22`，OpenCode `>=1.17.14`。
 
-在 OpenCode 配置的 plugin 列表中加入插件，不要覆盖已有插件：
+如果要安装到全局配置，可使用 `opencode plugin -g opencode-peek`。
+
+插件和 command 都配置在 `.opencode/opencode.json`：
 
 ```json
 {
-  "plugin": ["opencode-peek"]
+  "plugin": ["opencode-peek"],
+  "command": {
+    "peek": {
+      "description": "Generate an HTML view of the current OpenCode session",
+      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If either tool fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`."
+    }
+  }
 }
 ```
 
-将包内的 command 模板复制到当前项目：
-
-```text
-packages/opencode-peek/commands/peek.md
-→ .opencode/commands/peek.md
-```
-
 修改配置后重启 OpenCode。
-
-### 推荐：让 Agent 自动配置
-
-将下面的指令发送给 OpenCode Agent：
-
-```text
-请使用 npm 安装 opencode-peek。
-保留现有 OpenCode 配置，并将 opencode-peek 加入 plugin 列表。
-将包内的 commands/peek.md 复制到 .opencode/commands/peek.md。
-验证配置可解析，并告诉我重启 OpenCode。
-```
 
 ## 使用
 
@@ -125,7 +141,6 @@ opencode-kit/
 ├── packages/
 │   └── opencode-peek/
 │       ├── assets/                 # npm 包文档图片
-│       ├── commands/               # OpenCode command 模板
 │       ├── dist/                   # 发布构建产物
 │       └── README.md               # 插件文档
 ├── package.json                    # 根 workspace 配置
@@ -158,7 +173,7 @@ npm run pack:peek -- --dry-run
 ## 文档
 
 - [`opencode-peek` 插件文档](./packages/opencode-peek/README.zh-CN.md)
-- [`opencode-peek` command 模板](./packages/opencode-peek/commands/peek.md)
+- [`opencode-peek` 插件文档](./packages/opencode-peek/README.zh-CN.md)
 
 ## 许可证
 

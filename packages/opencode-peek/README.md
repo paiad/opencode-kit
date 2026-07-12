@@ -18,21 +18,39 @@ The initial release ships with one built-in theme; future themes can be added wi
 
 中文安装与 Agent 自动配置说明：[README.zh-CN.md](./README.zh-CN.md)
 
-The package also includes the standard command template at `commands/peek.md`. Copy it to `.opencode/commands/peek.md` after installation, or configure the equivalent command in `opencode.json`.
-
-## Recommended: Let your Agent install and configure it
-
-Send this instruction to your OpenCode Agent:
-
-```text
-Please install and configure the opencode-peek npm plugin: preserve the existing OpenCode configuration, add opencode-peek to the plugin list, write the package's commands/peek.md to the current project's .opencode/commands/peek.md, validate the configuration, and tell me to restart OpenCode.
-```
-
-The Agent will install the npm package, preserve existing settings, configure the command, validate the result, and prompt you to restart OpenCode.
+The plugin and slash command are configured together in `.opencode/opencode.json`.
 
 ## Install
 
-Add the plugin to your OpenCode configuration:
+### 🤖 Recommended: let your Agent configure it
+
+Send this instruction to your OpenCode Agent:
+
+````text
+Install and configure opencode-peek for the current OpenCode project.
+
+1. Run `opencode plugin opencode-peek` from the current project directory.
+2. Read `.opencode/opencode.json` and preserve all existing settings, plugins, and commands.
+3. Add or update `command.peek` with exactly this value:
+
+```json
+{
+  "description": "Generate an HTML view of the current OpenCode session",
+  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+}
+```
+
+4. Validate `.opencode/opencode.json`.
+5. Tell me to restart OpenCode after setup.
+
+Do not install the package with npm directly, create a duplicate local plugin, or modify unrelated files.
+````
+
+The Agent will install the plugin for the current project, preserve existing settings, configure the command, validate the result, and prompt you to restart OpenCode.
+
+### 🛠️ Manual configuration
+
+Install the plugin for the current project:
 
 ```json
 {
@@ -41,11 +59,13 @@ Add the plugin to your OpenCode configuration:
 }
 ```
 
-OpenCode installs npm plugins automatically at startup. Restart OpenCode after adding the plugin.
+Use `opencode plugin opencode-peek` to install the plugin and update the current project's configuration. To install it globally instead, use `opencode plugin -g opencode-peek`.
+
+Restart OpenCode after installation.
 
 ## Add the `/peek` command
 
-OpenCode plugins can register tools, but slash commands are configured by the user. Add this to `opencode.json`:
+OpenCode plugins can register tools, while slash commands are configured in `.opencode/opencode.json`:
 
 ```json
 {

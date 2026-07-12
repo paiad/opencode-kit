@@ -20,31 +20,36 @@
   <p><em>Token 用量详细报告弹窗</em></p>
 </div>
 
-## 最推荐：让 Agent 自动安装和配置
+## 安装
+
+### 🤖 推荐：让 Agent 自动配置
 
 把下面这段话直接发给你的 OpenCode Agent：
 
-```text
-请安装 npm 插件 opencode-peek，并完成配置：保留现有 OpenCode 配置，在 plugin 中加入 opencode-peek；将包内的 commands/peek.md 写入当前项目的 .opencode/commands/peek.md；验证配置可解析后告诉我重启 OpenCode。
+````text
+请为当前 OpenCode 项目安装并配置 opencode-peek。
+
+1. 在当前项目目录执行 `opencode plugin opencode-peek`。
+2. 读取 `.opencode/opencode.json`，保留所有已有的配置、plugin 和 command。
+3. 使用下面的内容新增或更新 `command.peek`：
+
+```json
+{
+  "description": "Generate an HTML view of the current OpenCode session",
+  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+}
 ```
+4. 验证 `.opencode/opencode.json`。
+5. 配置完成后告诉我重启 OpenCode。
 
-Agent 会自动执行 npm 安装、保留现有配置、安装 command，并提示重启 OpenCode。
+不要直接使用 npm 安装，不要创建重复的本地 plugin，不要修改无关文件。
+````
 
-## 手动配置
+Agent 会按当前项目范围安装插件、配置 command，并提示重启 OpenCode。
 
-也可以直接使用包内的 command 模板：
+### 🛠️ 手动配置
 
-```text
-packages/opencode-peek/commands/peek.md
-```
-
-将其复制到当前项目的：
-
-```text
-.opencode/commands/peek.md
-```
-
-或者在 `opencode.json` 中加入插件和 command。合并到已有配置时不要覆盖原来的 `plugin` 或 `command`：
+插件和 command 都配置在当前项目的 `.opencode/opencode.json` 中：
 
 ```json
 {
@@ -59,7 +64,13 @@ packages/opencode-peek/commands/peek.md
 }
 ```
 
-之后使用：
+如果要安装到全局配置，可使用：
+
+```bash
+opencode plugin -g opencode-peek
+```
+
+完成后重启 OpenCode，再使用：
 
 ```text
 /peek
