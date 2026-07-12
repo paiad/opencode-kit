@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { colorForTool } from "../config/tool-colors.js";
 import { peekSnapshotPaths } from "../../session-inspect/paths.js";
 import { escapeHtml, renderMarkdown, safeUrl } from "./markdown.js";
+import { renderResourcePreview } from "./rich-content.js";
 import { loadTokenUsage, renderTokenPanel } from "./token-panel.js";
 import type { PeekRenderOptions } from "../types/index.js";
 
@@ -182,10 +183,11 @@ function selectMessages(snapshot: unknown, options: PeekRenderOptions): unknown[
   return selected;
 }
 
-function renderToolOutput(output: unknown, preferredFormat: unknown): string {
-  if (typeof output === "string" && preferredFormat === "markdown") return renderMarkdown(output);
-  if (typeof output === "string") return `<pre class="plain-tool-output"><code>${escapeHtml(output)}</code></pre>`;
-  return jsonBlock(output ?? null);
+function renderToolOutput(output: unknown, preferredFormat: unknown, existingPreview?: string): string {
+  const preview = existingPreview ?? renderResourcePreview(output, typeof output === "string" ? { imagesOnly: true } : undefined);
+  if (typeof output === "string" && preferredFormat === "markdown") return `${preview}${renderMarkdown(output)}`;
+  if (typeof output === "string") return `${preview}<pre class="plain-tool-output"><code>${escapeHtml(output)}</code></pre>`;
+  return `${preview}${jsonDetails("Raw output", output ?? null)}`;
 }
 
 function renderToolPart(part: Record<string, unknown>): string {
@@ -197,9 +199,10 @@ function renderToolPart(part: Record<string, unknown>): string {
   const color = colorForTool(toolName);
   const input = isObject(state.input) ? state.input : {};
   const skillName = toolName === "skill" && typeof input.name === "string" ? input.name.trim() : "";
-  return `<details class="part tool-part ${color.className}">
+  const resourcePreview = renderResourcePreview(output, typeof output === "string" ? { imagesOnly: true } : undefined);
+  return `<details class="part tool-part ${color.className}"${resourcePreview ? " open" : ""}>
     <summary><span class="tool-title"><span>${escapeHtml(toolName)}</span>${skillName ? `<span class="tool-skill-name">(${escapeHtml(skillName)})</span>` : ""}${outputType ? `<span class="tool-type">${escapeHtml(outputType)}</span>` : ""}</span>${typeof state.status === "string" ? `<span class="badge">${escapeHtml(state.status)}</span>` : ""}</summary>
-    <div class="tool-body"><div class="tool-caption">${escapeHtml(normalized.skill || toolName)} output</div>${renderToolOutput(output, input.format)}</div>
+    <div class="tool-body"><div class="tool-caption">${escapeHtml(normalized.skill || toolName)} output</div>${renderToolOutput(output, input.format, resourcePreview)}</div>
   </details>`;
 }
 
@@ -211,18 +214,53 @@ function renderFilePart(part: Record<string, unknown>): string {
   const mime = mimeOfFilePart(part);
   const filename = typeof part.filename === "string" && part.filename.trim() ? part.filename.trim() : "File attachment";
   const url = typeof part.url === "string" ? part.url : "";
-  const imageUrl = /^image\//.test(mime) && (/^data:image\//.test(url) || /^blob:/.test(url) || Boolean(safeUrl(url))) ? url : "";
+  const imageAttachment = /^image\//.test(mime) || /\.(avif|gif|heic|jpeg|jpg|png|svg|webp)$/i.test(filename);
+  const imageUrl = imageAttachment && (/^data:image\//.test(url) || /^blob:/.test(url) || Boolean(safeUrl(url))) ? url : "";
   const openUrl = safeUrl(url);
+  const icon = fileIcon(mime, filename);
+  const fileJsonLabel = `File JSON (${displayMime(mime) || icon.label})`;
   return `<div class="part file-part"><div class="file-card">
-    ${imageUrl ? `<button class="file-preview-trigger" type="button" data-preview-src="${escapeHtml(imageUrl)}" data-preview-alt="${escapeHtml(filename)}"><img class="file-preview-image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(filename)}" loading="lazy"></button>` : ""}
+    ${imageUrl ? `<button class="file-preview-trigger" type="button" data-preview-src="${escapeHtml(imageUrl)}" data-preview-alt="${escapeHtml(filename)}"><span class="file-preview-frame"><img class="file-preview-image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(filename)}" loading="lazy"></span></button>` : `<div class="file-glyph" aria-label="${escapeHtml(icon.label)} attachment">${icon.svg}</div>`}
     <div class="file-meta"><strong>${escapeHtml(filename)}</strong>${mime ? `<span>${escapeHtml(mime)}</span>` : ""}${openUrl ? `<a href="${escapeHtml(openUrl)}" target="_blank" rel="noreferrer">Open file</a>` : ""}</div>
-  </div>${jsonDetails("File JSON", part)}</div>`;
+  </div>${jsonDetails(fileJsonLabel, part)}</div>`;
+}
+
+function displayMime(mime: string): string {
+  const aliases: Record<string, string> = {
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "application/docx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "application/xlsx",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": "application/pptx",
+    "application/msword": "application/doc",
+    "application/vnd.ms-excel": "application/xls",
+    "application/vnd.ms-powerpoint": "application/ppt",
+  };
+  return aliases[mime.toLowerCase()] || mime;
+}
+
+function fileIcon(mime: string, filename: string): { label: string; svg: string } {
+  const normalized = `${mime} ${filename}`.toLowerCase();
+  if (normalized.includes("pdf")) return { label: "PDF", svg: fileIconSvg("PDF", "#e65757") };
+  if (normalized.includes("word") || /\.(doc|docx)$/i.test(filename)) return { label: "DOCX", svg: fileIconSvg("DOCX", "#3978d4") };
+  if (normalized.includes("sheet") || /\.(xls|xlsx|csv)$/i.test(filename)) return { label: "XLS", svg: fileIconSvg("XLS", "#3d9a68") };
+  if (normalized.includes("presentation") || /\.(ppt|pptx)$/i.test(filename)) return { label: "PPT", svg: fileIconSvg("PPT", "#df8b3b") };
+  if (normalized.includes("text") || /\.(txt|md)$/i.test(filename)) return { label: "TXT", svg: fileIconSvg("TXT", "#7770c5") };
+  return { label: "FILE", svg: fileIconSvg("FILE", "#77736a") };
+}
+
+function fileIconSvg(label: string, accent: string): string {
+  return `<svg class="file-icon-svg" viewBox="0 0 64 76" role="img" aria-label="${escapeHtml(label)} file">
+    <path class="file-icon-paper" d="M9 2h31l15 15v57H9z" fill="#fffdf7" stroke="#17140f" stroke-width="3"/>
+    <path d="M40 2v16h15" fill="#ede7d8" stroke="#17140f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M17 29h30M17 35h22" stroke="#c8bda8" stroke-width="3" stroke-linecap="square"/>
+    <rect x="14" y="45" width="36" height="17" rx="2" fill="${accent}" stroke="#17140f" stroke-width="3"/>
+    <text x="32" y="57" text-anchor="middle" fill="#fffdf7" font-family="ui-monospace,monospace" font-size="9" font-weight="900">${escapeHtml(label)}</text>
+  </svg>`;
 }
 
 function renderPart(rawPart: unknown): string {
   const part = isObject(rawPart) ? rawPart : {};
   const type = typeof part.type === "string" ? part.type : "unknown";
-  if (type === "text") return `<div class="text-part">${renderMarkdown(part.text)}</div>`;
+  if (type === "text") return `<div class="text-part">${renderMarkdown(part.text)}${renderResourcePreview(part.text, { imagesOnly: true })}</div>`;
   if (type === "tool") return renderToolPart(part);
   if (type === "file") return renderFilePart(part);
   if (type === "reasoning") return `<details class="part reasoning-part"><summary>reasoning</summary><div class="reasoning-body">${renderMarkdown(part.text)}</div></details>`;
@@ -291,7 +329,7 @@ function renderDocument(snapshot: unknown, context: RenderContext, avatarSvgMap?
 }
 
 function clientScript(): string {
-  return `(() => { const copy = async text => { if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text); const area = document.createElement('textarea'); area.value = text; document.body.append(area); area.select(); document.execCommand('copy'); area.remove(); }; document.querySelectorAll('.json-copy').forEach(button => button.addEventListener('click', async () => { const text = button.parentElement?.querySelector('code')?.textContent || ''; if (!text) return; await copy(text); button.textContent = 'Copied'; setTimeout(() => { button.textContent = 'Copy JSON'; }, 1200); })); document.querySelectorAll('[data-target]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))); const dialog = document.querySelector('.image-lightbox'); const image = document.querySelector('.image-lightbox-image'); document.querySelectorAll('.file-preview-trigger').forEach(button => button.addEventListener('click', () => { image.src = button.dataset.previewSrc; image.alt = button.dataset.previewAlt || ''; dialog.showModal(); })); document.querySelector('.image-lightbox-close')?.addEventListener('click', () => dialog.close()); })();`;
+  return `(() => { const copy = async text => { if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text); const area = document.createElement('textarea'); area.value = text; document.body.append(area); area.select(); document.execCommand('copy'); area.remove(); }; document.querySelectorAll('.json-copy').forEach(button => button.addEventListener('click', async () => { const text = button.parentElement?.querySelector('code')?.textContent || ''; if (!text) return; await copy(text); button.classList.add('is-copied'); button.textContent = 'Copied'; setTimeout(() => { button.classList.remove('is-copied'); button.textContent = 'Copy JSON'; }, 1200); })); document.querySelectorAll('[data-target]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }))); const dialog = document.querySelector('.image-lightbox'); const image = document.querySelector('.image-lightbox-image'); document.querySelectorAll('.file-preview-trigger').forEach(button => button.addEventListener('click', () => { image.src = button.dataset.previewSrc; image.alt = button.dataset.previewAlt || ''; dialog.showModal(); })); document.querySelector('.image-lightbox-close')?.addEventListener('click', () => dialog.close()); })();`;
 }
 
 export async function runRenderSession(nextSnapshotPath: string, outputPathArg?: string, options: PeekRenderOptions = {}): Promise<string> {
