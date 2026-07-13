@@ -41,17 +41,17 @@
 请为当前 OpenCode 项目安装并配置 opencode-peek。
 
 1. 在当前项目目录执行 `opencode plugin opencode-peek`。
-2. 读取 `opencode.jsonc`，保留所有已有的配置、plugin 和 command。
+2. 读取 `.opencode/opencode.json`，保留所有已有的配置、plugin 和 command。
 3. 使用下面的内容新增或更新 `command.peek`：
 
 ```json
 {
   "description": "Generate an HTML view of the current OpenCode session",
-  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the `markdownLink` returned by `peek`. Do not add explanations or perform other actions."
 }
 ```
 
-4. 验证 `opencode.jsonc`。
+4. 验证 `.opencode/opencode.json`。
 5. 配置完成后告诉我重启 OpenCode。
 
 不要直接使用 npm 安装，不要创建重复的本地 plugin，不要修改无关文件。
@@ -69,7 +69,7 @@ opencode plugin opencode-peek
 
 如果要安装到全局配置，可使用 `opencode plugin -g opencode-peek`。
 
-插件和 command 都配置在 `opencode.jsonc`：
+插件和 command 都配置在 `.opencode/opencode.json`：
 
 ```json
 {
@@ -77,7 +77,7 @@ opencode plugin opencode-peek
   "command": {
     "peek": {
       "description": "Generate an HTML view of the current OpenCode session",
-      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the `markdownLink` returned by `peek`. Do not add explanations or perform other actions."
     }
   }
 }
@@ -100,7 +100,7 @@ opencode plugin opencode-peek
 3. 渲染 HTML transcript；
 4. 将最新结果写入 `.workspace/cache/peek/latest.html`。
 
-执行成功后，命令只返回生成 HTML 文件的绝对路径。
+执行成功后，命令返回可点击的本地链接：`[🍟 打开 Peek 报告](file:///...)`。
 
 ## 功能
 
@@ -136,7 +136,8 @@ opencode plugin opencode-peek
 ```text
 opencode-kit/
 ├── assets/                         # 根 README 资源
-├── opencode.jsonc                   # 项目配置，包含 /peek command
+├── .opencode/
+│   └── opencode.json                 # 项目配置，包含 /peek command
 ├── packages/
 │   └── opencode-peek/
 │       ├── src/                    # 插件源码与运行时模块

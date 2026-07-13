@@ -18,7 +18,7 @@ The initial release ships with one built-in theme; future themes can be added wi
 
 中文安装与 Agent 自动配置说明：[README.zh-CN.md](./README.zh-CN.md)
 
-The plugin and slash command are configured together in `opencode.jsonc`.
+The plugin and slash command are configured together in `.opencode/opencode.json`.
 
 ## Install
 
@@ -30,17 +30,17 @@ Send this instruction to your OpenCode Agent:
 Install and configure opencode-peek for the current OpenCode project.
 
 1. Run `opencode plugin opencode-peek` from the current project directory.
-2. Read `opencode.jsonc` and preserve all existing settings, plugins, and commands.
+2. Read `.opencode/opencode.json` and preserve all existing settings, plugins, and commands.
 3. Add or update `command.peek` with exactly this value:
 
 ```json
 {
   "description": "Generate an HTML view of the current OpenCode session",
-  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+  "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the `markdownLink` returned by `peek`. Do not add explanations or perform other actions."
 }
 ```
 
-4. Validate `opencode.jsonc`.
+4. Validate `.opencode/opencode.json`.
 5. Tell me to restart OpenCode after setup.
 
 Do not install the package with npm directly, create a duplicate local plugin, or modify unrelated files.
@@ -73,14 +73,14 @@ Restart OpenCode and run `/peek` again to regenerate the latest HTML output.
 
 ## Add the `/peek` command
 
-OpenCode plugins can register tools, while slash commands are configured in `opencode.jsonc`:
+OpenCode plugins can register tools, while slash commands are configured in `.opencode/opencode.json`:
 
 ```json
 {
   "command": {
     "peek": {
       "description": "Generate an HTML view of the current OpenCode session",
-      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
+      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the `markdownLink` returned by `peek`. Do not add explanations or perform other actions."
     }
   }
 }
