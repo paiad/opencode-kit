@@ -11,3 +11,4 @@ packages/opencode-peek/dist-tests/
 !.opencode/.env.example
 .workspace/cache/
 *.log
+.gstack/
