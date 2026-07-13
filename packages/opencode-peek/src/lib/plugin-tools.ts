@@ -1,4 +1,5 @@
 import { tool } from "@opencode-ai/plugin";
+import { pathToFileURL } from "node:url";
 import { defaultLatestHtmlPath, defaultSnapshotPath, renderPeekHtml } from "./peek/index.js";
 import { preparePeekSnapshot } from "./session-inspect/snapshot.js";
 import { writeTokenUsageArtifacts } from "./session-inspect/token-report.js";
@@ -58,7 +59,15 @@ export const peekTool = tool({
     const snapshotPath = defaultSnapshotPath(workspaceRoot);
     try {
       const htmlPath = await renderPeekHtml({ workspaceRoot, firstNTurns: args.firstNTurns });
-      return JSON.stringify({ ok: true, snapshotPath, htmlPath, latestHtmlPath: defaultLatestHtmlPath(workspaceRoot) }, null, 2);
+      const htmlUrl = pathToFileURL(htmlPath).href;
+      return JSON.stringify({
+        ok: true,
+        snapshotPath,
+        htmlPath,
+        htmlUrl,
+        markdownLink: `[🍟 打开 Peek 报告](${htmlUrl})`,
+        latestHtmlPath: defaultLatestHtmlPath(workspaceRoot),
+      }, null, 2);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return JSON.stringify({ ok: false, snapshotPath, error: { code: message.includes("Peek snapshot not found:") ? "snapshot-missing" : "peek-render-failed", message } }, null, 2);
