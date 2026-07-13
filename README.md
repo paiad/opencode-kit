@@ -105,7 +105,7 @@ The plugin and command are configured in `opencode.jsonc`:
   "command": {
     "peek": {
       "description": "Generate an HTML view of the current OpenCode session",
-      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If either tool fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`."
+      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
     }
   }
 }
@@ -171,8 +171,7 @@ opencode-kit/
 │   ├── grilling/                   # Stress-test plans and designs
 │   ├── video-download/             # Download video and audio
 │   └── video-understand/           # Extract frames and transcribe video
-├── .opencode/
-│   └── commands/peek.md             # Project-level /peek command
+├── opencode.jsonc                   # Project configuration, including /peek
 ├── packages/
 │   └── opencode-peek/
 │       ├── src/                    # Plugin source and runtime modules

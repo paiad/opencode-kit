@@ -77,7 +77,7 @@ opencode plugin opencode-peek
   "command": {
     "peek": {
       "description": "Generate an HTML view of the current OpenCode session",
-      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If either tool fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`."
+      "template": "Generate a `peek` HTML transcript for the current session. First call `session_inspect` to generate a fresh snapshot and token report. Then call `peek`. Do not pass `firstNTurns` unless the user explicitly requests the first N turns only. If `session_inspect` fails, briefly state the reason and stop. If `peek` fails, briefly state the reason and stop. On success, reply only with the absolute `htmlPath` returned by `peek`. Do not add explanations or perform other actions."
     }
   }
 }
@@ -136,8 +136,7 @@ opencode plugin opencode-peek
 ```text
 opencode-kit/
 ├── assets/                         # 根 README 资源
-├── .opencode/
-│   └── commands/peek.md             # 项目级 /peek command
+├── opencode.jsonc                   # 项目配置，包含 /peek command
 ├── packages/
 │   └── opencode-peek/
 │       ├── src/                    # 插件源码与运行时模块
