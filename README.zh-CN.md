@@ -41,7 +41,7 @@
 请为当前 OpenCode 项目安装并配置 opencode-peek。
 
 1. 在当前项目目录执行 `opencode plugin opencode-peek`。
-2. 读取 `.opencode/opencode.json`，保留所有已有的配置、plugin 和 command。
+2. 读取 `opencode.jsonc`，保留所有已有的配置、plugin 和 command。
 3. 使用下面的内容新增或更新 `command.peek`：
 
 ```json
@@ -51,7 +51,7 @@
 }
 ```
 
-4. 验证 `.opencode/opencode.json`。
+4. 验证 `opencode.jsonc`。
 5. 配置完成后告诉我重启 OpenCode。
 
 不要直接使用 npm 安装，不要创建重复的本地 plugin，不要修改无关文件。
@@ -69,7 +69,7 @@ opencode plugin opencode-peek
 
 如果要安装到全局配置，可使用 `opencode plugin -g opencode-peek`。
 
-插件和 command 都配置在 `.opencode/opencode.json`：
+插件和 command 都配置在 `opencode.jsonc`：
 
 ```json
 {

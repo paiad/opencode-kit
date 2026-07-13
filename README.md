@@ -23,6 +23,34 @@
 | --- | --- | --- |
 | [`opencode-peek`](./packages/opencode-peek) | Render the current OpenCode session as a readable HTML transcript with token usage and model avatars. | `opencode plugin opencode-peek` |
 
+## Agents and skills
+
+This repository also includes reusable agents and skills for OpenCode workflows. Copy or link the entries you need into your project's `.agents/` or `skills/` directory, then invoke them by name from your OpenCode agent.
+
+### Agents
+
+| Agent | Description | Reference |
+| --- | --- | --- |
+| `apollo` | Observes images and screenshots, reads visible text, and separates confirmed facts from uncertain points. | [`agents/apollo.md`](./.agents/apollo.md) |
+
+### Skills
+
+| Skill | Description | Reference |
+| --- | --- | --- |
+| `brainstorming` | Turns vague ideas into validated designs and implementation-ready specifications through guided questions. | [`skills/brainstorming/SKILL.md`](./skills/brainstorming/SKILL.md) |
+| `grilling` | Stress-tests a plan or design one decision at a time before implementation. | [`skills/grilling/SKILL.md`](./skills/grilling/SKILL.md) |
+| `video-download` | Downloads video, audio, subtitles, or metadata from YouTube and other sites with `yt-dlp`. | [`skills/video-download/SKILL.md`](./skills/video-download/SKILL.md) |
+| `video-understand` | Extracts video frames and optionally transcribes audio locally with FFmpeg and Whisper. | [`skills/video-understand/SKILL.md`](./skills/video-understand/SKILL.md) |
+
+For example, after installing `yt-dlp` and FFmpeg, use `video-download` to save a source video and `video-understand` to inspect its frames and transcript:
+
+```bash
+yt-dlp "VIDEO_URL" -o "video.mp4" --merge-output-format mp4
+python3 skills/video-understand/scripts/understand_video.py video.mp4
+```
+
+See each skill's `SKILL.md` for prerequisites, options, and workflow-specific guidance.
+
 ## Peek
 
 `opencode-peek` turns the current OpenCode session into a readable, interactive HTML transcript.
@@ -41,7 +69,7 @@ Send this instruction to your OpenCode Agent:
 Install and configure opencode-peek for the current OpenCode project.
 
 1. Run `opencode plugin opencode-peek` from the current project directory.
-2. Read `.opencode/opencode.json` and preserve all existing settings, plugins, and commands.
+2. Read `opencode.jsonc` and preserve all existing settings, plugins, and commands.
 3. Add or update `command.peek` with this template:
 
 ```json
@@ -51,7 +79,7 @@ Install and configure opencode-peek for the current OpenCode project.
 }
 ```
 
-4. Validate `.opencode/opencode.json`.
+4. Validate `opencode.jsonc`.
 5. Tell me to restart OpenCode after setup.
 
 Do not install the package with npm directly, create a duplicate local plugin, or modify unrelated files.
@@ -69,7 +97,7 @@ Requirements: Node.js `>=22` and OpenCode `>=1.17.14`.
 
 To install it globally instead, use `opencode plugin -g opencode-peek`.
 
-The plugin and command are configured in `.opencode/opencode.json`:
+The plugin and command are configured in `opencode.jsonc`:
 
 ```json
 {
@@ -136,6 +164,13 @@ These files are local artifacts and should not be committed.
 ```text
 opencode-kit/
 ├── assets/                         # Root README assets
+├── .agents/                        # Reusable OpenCode subagents
+│   └── apollo.md                   # Visual observation agent
+├── skills/                         # Reusable OpenCode skills
+│   ├── brainstorming/              # Shape ideas into designs
+│   ├── grilling/                   # Stress-test plans and designs
+│   ├── video-download/             # Download video and audio
+│   └── video-understand/           # Extract frames and transcribe video
 ├── .opencode/
 │   └── commands/peek.md             # Project-level /peek command
 ├── packages/

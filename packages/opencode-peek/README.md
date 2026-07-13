@@ -18,7 +18,7 @@ The initial release ships with one built-in theme; future themes can be added wi
 
 中文安装与 Agent 自动配置说明：[README.zh-CN.md](./README.zh-CN.md)
 
-The plugin and slash command are configured together in `.opencode/opencode.json`.
+The plugin and slash command are configured together in `opencode.jsonc`.
 
 ## Install
 
@@ -30,7 +30,7 @@ Send this instruction to your OpenCode Agent:
 Install and configure opencode-peek for the current OpenCode project.
 
 1. Run `opencode plugin opencode-peek` from the current project directory.
-2. Read `.opencode/opencode.json` and preserve all existing settings, plugins, and commands.
+2. Read `opencode.jsonc` and preserve all existing settings, plugins, and commands.
 3. Add or update `command.peek` with exactly this value:
 
 ```json
@@ -40,7 +40,7 @@ Install and configure opencode-peek for the current OpenCode project.
 }
 ```
 
-4. Validate `.opencode/opencode.json`.
+4. Validate `opencode.jsonc`.
 5. Tell me to restart OpenCode after setup.
 
 Do not install the package with npm directly, create a duplicate local plugin, or modify unrelated files.
@@ -73,7 +73,7 @@ Restart OpenCode and run `/peek` again to regenerate the latest HTML output.
 
 ## Add the `/peek` command
 
-OpenCode plugins can register tools, while slash commands are configured in `.opencode/opencode.json`:
+OpenCode plugins can register tools, while slash commands are configured in `opencode.jsonc`:
 
 ```json
 {
