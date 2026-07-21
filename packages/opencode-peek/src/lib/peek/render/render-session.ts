@@ -198,6 +198,7 @@ function renderToolOutput(output: unknown, preferredFormat: unknown, existingPre
 
 function renderToolPart(part: Record<string, unknown>): string {
   const toolName = typeof part.tool === "string" && part.tool.trim() ? part.tool.trim() : "tool";
+  const partId = typeof part.id === "string" ? part.id.trim() : "";
   const state = isObject(part.state) ? part.state : {};
   const output = parseJsonMaybe(state.output);
   const normalized = unwrapEnvelope(output);
@@ -207,7 +208,7 @@ function renderToolPart(part: Record<string, unknown>): string {
   const skillName = toolName === "skill" && typeof input.name === "string" ? input.name.trim() : "";
   const resourcePreview = renderResourcePreview(output, typeof output === "string" ? { imagesOnly: true } : undefined);
   return `<details class="part tool-part ${color.className}"${resourcePreview ? " open" : ""}>
-    <summary><span class="tool-title"><span>${escapeHtml(toolName)}</span>${skillName ? `<span class="tool-skill-name">(${escapeHtml(skillName)})</span>` : ""}${outputType ? `<span class="tool-type">${escapeHtml(outputType)}</span>` : ""}</span>${typeof state.status === "string" ? `<span class="badge">${escapeHtml(state.status)}</span>` : ""}</summary>
+    <summary><span class="tool-title"><span>${escapeHtml(toolName)}</span>${partId ? `<span class="part-id">(${escapeHtml(partId)})</span>` : ""}${skillName ? `<span class="tool-skill-name">(${escapeHtml(skillName)})</span>` : ""}${outputType ? `<span class="tool-type">${escapeHtml(outputType)}</span>` : ""}</span>${typeof state.status === "string" ? `<span class="badge">${escapeHtml(state.status)}</span>` : ""}</summary>
     <div class="tool-body"><div class="tool-caption">${escapeHtml(normalized.skill || toolName)} output</div>${renderToolOutput(output, input.format, resourcePreview)}</div>
   </details>`;
 }
