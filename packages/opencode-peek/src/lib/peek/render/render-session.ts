@@ -205,11 +205,13 @@ function renderToolPart(part: Record<string, unknown>): string {
   const outputType = isObject(normalized.data) && typeof normalized.data.type === "string" ? normalized.data.type : "";
   const color = colorForTool(toolName);
   const input = isObject(state.input) ? state.input : {};
+  const hasInput = state.input !== undefined && state.input !== null;
   const skillName = toolName === "skill" && typeof input.name === "string" ? input.name.trim() : "";
+  const displayName = normalized.skill || toolName;
   const resourcePreview = renderResourcePreview(output, typeof output === "string" ? { imagesOnly: true } : undefined);
   return `<details class="part tool-part ${color.className}"${resourcePreview ? " open" : ""}>
     <summary><span class="tool-title"><span>${escapeHtml(toolName)}</span>${partId ? `<span class="part-id">(${escapeHtml(partId)})</span>` : ""}${skillName ? `<span class="tool-skill-name">(${escapeHtml(skillName)})</span>` : ""}${outputType ? `<span class="tool-type">${escapeHtml(outputType)}</span>` : ""}</span>${typeof state.status === "string" ? `<span class="badge">${escapeHtml(state.status)}</span>` : ""}</summary>
-    <div class="tool-body"><div class="tool-caption">${escapeHtml(normalized.skill || toolName)} output</div>${renderToolOutput(output, input.format, resourcePreview)}</div>
+    <div class="tool-body">${hasInput ? `<section class="tool-section tool-input">${jsonDetails(`${displayName} input`, state.input)}</section>` : ""}<section class="tool-section tool-output"><div class="tool-caption">${escapeHtml(displayName)} output</div>${renderToolOutput(output, input.format, resourcePreview)}</section></div>
   </details>`;
 }
 
